@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BlockChain Supply Chain Transparency</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Header & Navigation -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-cube"></i>
+                    <span>BlockChain SCT</span>
+                </div>
+                <nav class="nav">
+                    <button class="nav-btn active" data-view="dashboard">
+                        <i class="fas fa-dashboard"></i> Dashboard
+                    </button>
+                    <button class="nav-btn" data-view="register">
+                        <i class="fas fa-plus"></i> Register Product
+                    </button>
+                    <button class="nav-btn" data-view="track">
+                        <i class="fas fa-search"></i> Track Product
+                    </button>
+                    <button class="nav-btn" data-view="quality">
+                        <i class="fas fa-check-circle"></i> Quality
+                    </button>
+                    <button class="nav-btn" data-view="fraud">
+                        <i class="fas fa-shield-alt"></i> Fraud Detection
+                    </button>
+                    <button class="nav-btn" data-view="verify">
+                        <i class="fas fa-qrcode"></i> Verify
+                    </button>
+                    <button class="nav-btn" data-view="analytics">
+                        <i class="fas fa-chart-bar"></i> Analytics
+                    </button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+            <!-- Dashboard View -->
+            <section id="dashboard" class="view active">
+                <h1>Supply Chain Dashboard</h1>
+                
+                <!-- Metrics Cards -->
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-icon">
+                            <i class="fas fa-box"></i>
+                        </div>
+                        <div class="metric-content">
+                            <div class="metric-value" id="totalProducts">0</div>
+                            <div class="metric-label">Total Products</div>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">
+                            <i class="fas fa-truck"></i>
+                        </div>
+                        <div class="metric-content">
+                            <div class="metric-value" id="inTransit">0</div>
+                            <div class="metric-label">In Transit</div>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="metric-content">
+                            <div class="metric-value" id="qualityPassed">0</div>
+                            <div class="metric-label">Quality Passed</div>
+                        </div>
+                    </div>
+                    <div class="metric-card fraud-alert">
+                        <div class="metric-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="metric-content">
+                            <div class="metric-value" id="fraudAlerts">0</div>
+                            <div class="metric-label">Fraud Alerts</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activities -->
+                <div class="dashboard-section">
+                    <h2>Recent Activities</h2>
+                    <div class="activity-list" id="recentActivities">
+                        <!-- Activities will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Fraud Alerts -->
+                <div class="dashboard-section">
+                    <h2>Active Fraud Alerts</h2>
+                    <div class="fraud-alerts" id="activeFraudAlerts">
+                        <!-- Fraud alerts will be populated by JavaScript -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Product Registration View -->
+            <section id="register" class="view">
+                <h1>Register New Product</h1>
+                <div class="form-container">
+                    <form id="productRegistrationForm" class="registration-form">
+                        <div class="form-group">
+                            <label class="form-label" for="productName">Product Name</label>
+                            <input type="text" id="productName" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="manufacturer">Manufacturer</label>
+                            <input type="text" id="manufacturer" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="batchNumber">Batch Number</label>
+                            <input type="text" id="batchNumber" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="manufacturingDate">Manufacturing Date</label>
+                            <input type="date" id="manufacturingDate" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="productCategory">Category</label>
+                            <select id="productCategory" class="form-control" required>
+                                <option value="">Select Category</option>
+                                <option value="Food &amp; Beverage">Food &amp; Beverage</option>
+                                <option value="Pharmaceuticals">Pharmaceuticals</option>
+                                <option value="Electronics">Electronics</option>
+                                <option value="Textiles">Textiles</option>
+                                <option value="Automotive">Automotive</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="productDescription">Description</label>
+                            <textarea id="productDescription" class="form-control" rows="3"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn--primary btn--full-width">
+                            <i class="fas fa-plus"></i> Register Product
+                        </button>
+                    </form>
+                    
+                    <!-- Registration Success -->
+                    <div id="registrationSuccess" class="success-message hidden">
+                        <i class="fas fa-check-circle"></i>
+                        <h3>Product Successfully Registered!</h3>
+                        <div class="blockchain-info">
+                            <p><strong>Product ID:</strong> <span id="generatedId"></span></p>
+                            <p><strong>Blockchain Hash:</strong> <span id="generatedHash"></span></p>
+                            <p><strong>Transaction ID:</strong> <span id="transactionId"></span></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Track Product View -->
+            <section id="track" class="view">
+                <h1>Track Product</h1>
+                <div class="search-container">
+                    <div class="search-form">
+                        <input type="text" id="searchInput" class="form-control" placeholder="Enter Product ID or Batch Number">
+                        <button id="searchBtn" class="btn btn--primary">
+                            <i class="fas fa-search"></i> Search
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Product Details -->
+                <div id="productDetails" class="product-details hidden">
+                    <!-- Product details will be populated by JavaScript -->
+                </div>
+
+                <!-- Supply Chain Timeline -->
+                <div id="supplyChainTimeline" class="timeline-container hidden">
+                    <h2>Supply Chain Journey</h2>
+                    <div class="timeline" id="timeline">
+                        <!-- Timeline will be populated by JavaScript -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quality Management View -->
+            <section id="quality" class="view">
+                <h1>Quality Management</h1>
+                
+                <!-- Add Quality Check -->
+                <div class="quality-section">
+                    <h2>Record Quality Check</h2>
+                    <form id="qualityCheckForm" class="quality-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" for="qcProductId">Product ID</label>
+                                <input type="text" id="qcProductId" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="testType">Test Type</label>
+                                <select id="testType" class="form-control" required>
+                                    <option value="">Select Test Type</option>
+                                    <option value="Moisture Content">Moisture Content</option>
+                                    <option value="Pesticide Residue">Pesticide Residue</option>
+                                    <option value="Heavy Metals">Heavy Metals</option>
+                                    <option value="Microbiological">Microbiological</option>
+                                    <option value="Nutritional Analysis">Nutritional Analysis</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" for="testResult">Test Result</label>
+                                <input type="text" id="testResult" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="testStatus">Status</label>
+                                <select id="testStatus" class="form-control" required>
+                                    <option value="">Select Status</option>
+                                    <option value="Passed">Passed</option>
+                                    <option value="Failed">Failed</option>
+                                    <option value="Pending">Pending</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" for="inspector">Inspector Name</label>
+                                <input type="text" id="inspector" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="certification">Certification</label>
+                                <input type="text" id="certification" class="form-control">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn--primary">
+                            <i class="fas fa-check"></i> Record Quality Check
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Quality Records List -->
+                <div class="quality-section">
+                    <h2>Recent Quality Records</h2>
+                    <div class="quality-records" id="qualityRecords">
+                        <!-- Quality records will be populated by JavaScript -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Fraud Detection View -->
+            <section id="fraud" class="view">
+                <h1>Fraud Detection</h1>
+                
+                <!-- Fraud Statistics -->
+                <div class="fraud-stats">
+                    <div class="stat-card">
+                        <h3>Total Alerts</h3>
+                        <div class="stat-value" id="totalAlerts">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>High Priority</h3>
+                        <div class="stat-value high" id="highPriorityAlerts">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Under Investigation</h3>
+                        <div class="stat-value medium" id="investigationAlerts">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Resolved</h3>
+                        <div class="stat-value low" id="resolvedAlerts">0</div>
+                    </div>
+                </div>
+
+                <!-- Fraud Alerts List -->
+                <div class="fraud-alerts-list">
+                    <h2>Fraud Alerts</h2>
+                    <div class="alerts-container" id="fraudAlertsList">
+                        <!-- Fraud alerts will be populated by JavaScript -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Product Verification View -->
+            <section id="verify" class="view">
+                <h1>Product Verification</h1>
+                <div class="verification-container">
+                    <div class="verify-form">
+                        <h2>Verify Product Authenticity</h2>
+                        <p>Enter the product ID or scan the QR code to verify authenticity</p>
+                        <div class="verification-input">
+                            <input type="text" id="verifyProductId" class="form-control" placeholder="Enter Product ID">
+                            <button id="verifyBtn" class="btn btn--primary">
+                                <i class="fas fa-shield-alt"></i> Verify
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Verification Result -->
+                    <div id="verificationResult" class="verification-result hidden">
+                        <!-- Verification result will be populated by JavaScript -->
+                    </div>
+                </div>
+            </section>
+
+         <!--  <!-- Analytics View --> 
+            <section id="analytics" class="view">
+                <h1>Supply Chain Analytics</h1>
+                
+                <!-- Charts Container -->
+                <div class="analytics-grid">
+                    <div class="chart-container">
+                        <h3>Products by Status</h3>
+                        <canvas id="statusChart" width="400" height="200"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Quality Check Results</h3>
+                        <canvas id="qualityChart" width="400" height="200"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Monthly Registrations</h3>
+                        <canvas id="registrationsChart" width="400" height="200"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Fraud Detection Trends</h3>
+                        <canvas id="fraudChart" width="400" height="200"></canvas>
+                    </div>
+                </div>
+
+                <!-- Performance Metrics -->
+                <div class="performance-metrics">
+                    <h2>Performance Metrics</h2>
+                    <div class="metrics-table">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Metric</th>
+                                    <th>Current Value</th>
+                                    <th>Target</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>On-Time Delivery Rate</td>
+                                    <td>94%</td>
+                                    <td>95%</td>
+                                    <td><span class="status status--warning">Below Target</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Quality Pass Rate</td>
+                                    <td>89%</td>
+                                    <td>90%</td>
+                                    <td><span class="status status--warning">Below Target</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Fraud Detection Rate</td>
+                                    <td>98%</td>
+                                    <td>95%</td>
+                                    <td><span class="status status--success">Above Target</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Compliance Score</td>
+                                    <td>96%</td>
+                                    <td>95%</td>
+                                    <td><span class="status status--success">Above Target</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Success/Error Messages -->
+    <div id="notification" class="notification hidden">
+        <div class="notification-content">
+            <span id="notificationMessage"></span>
+            <button id="notificationClose" class="notification-close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay hidden">
+        <div class="loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Processing blockchain transaction...</p>
+        </div>
+    </div> 
+
+    <script src="app.js"></script>
+</body>
+</html>
